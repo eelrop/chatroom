@@ -1,0 +1,179 @@
+body {
+  background: #121212;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: gold;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+.admin-container {
+  max-width: 900px;
+  margin: 20px auto;
+  background: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid gold;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  background: #181818;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 8px;
+  border-bottom: 1px solid #333;
+  text-align: left;
+}
+
+th {
+  background: #222;
+  color: gold;
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.4);
+}
+
+tr:nth-child(even) {
+  background: #1a1a1a;
+}
+
+.action-btn {
+  font-size: 12px;
+  padding: 4px 8px;
+  margin-left: 5px;
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.action-btn:hover {
+  background: gold;
+  color: black;
+}
+
+#closeAdmin, #clearReportsBtn, #saveBadWordsBtn, #reloadBadWordsBtn {
+  display: block;
+  margin: 10px auto;
+  background: gold;
+  color: black;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#closeAdmin:hover, #clearReportsBtn:hover, #saveBadWordsBtn:hover, #reloadBadWordsBtn:hover {
+  background: orange;
+}
+
+textarea {
+  width: 100%;
+  background: #1e1e1e;
+  color: white;
+  border: 1px solid gold;
+  border-radius: 5px;
+  padding: 5px;
+  resize: vertical;
+}
+
+.notice {
+  margin-top: 10px;
+  font-size: 14px;
+  display: none;
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid gold;
+  background: rgba(255, 215, 0, 0.1);
+  color: gold;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modalContent {
+  background: #1e1e1e;
+  padding: 20px;
+  border: 2px solid gold;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Admin Login Modal Input & Button */
+#adminLoginModal input[type="password"] {
+  background: #222;
+  border: 1px solid #555;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+#adminLoginModal button {
+  background: gold;
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#adminLoginModal button:hover {
+  background: orange;
+}
+
+#adminError {
+  color: red;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+/* Confirmation Modal Buttons */
+.confirm-btn {
+  background: gold;
+  color: black;
+  font-weight: bold;
+}
+.confirm-btn:hover {
+  background: orange;
+}
+.cancel-btn {
+  background: #b30000;
+  color: white;
+}
+.cancel-btn:hover {
+  background: #e60000;
+}
+
+/* Status flash */
+.user-status, .ip-status {
+  font-size: 12px;
+  margin-left: 5px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.user-status.show, .ip-status.show {
+  opacity: 1;
+  color: gold;
+}

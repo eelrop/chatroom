@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forgot Password - TribeChat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="chat.css">
+  <style>
+    body {
+      background: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid gold;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+    h2 {
+      text-align: center;
+      color: gold;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background: gold;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { background: orange; }
+    .back-btn {
+      margin-top: 10px;
+      background: #444;
+      color: white;
+    }
+    .back-btn:hover { background: #555; }
+    .token-box {
+      margin-top: 15px;
+      padding: 10px;
+      background: #2a2a2a;
+      border: 1px solid #666;
+      border-radius: 5px;
+      color: gold;
+      text-align: center;
+      font-weight: bold;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Forgot Password</h2>
+
+  <form id="forgotForm">
+    <label>Email Address:</label>
+    <input type="email" id="email" placeholder="Enter your account email" required>
+
+    <button type="submit">Get Reset Token</button>
+    <!-- Single Back to Login button -->
+    <button type="button" class="back-btn" onclick="window.location.href='index.html?showLogin=true'">
+      Back to Login
+    </button>
+  </form>
+
+  <div id="tokenBox" class="token-box"></div>
+</div>
+
+<script>
+  // Check if redirected from invalid token
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('error') === 'invalidToken') {
+    const tokenBox = document.getElementById('tokenBox');
+    tokenBox.style.display = 'block';
+    tokenBox.style.color = 'red';
+    tokenBox.textContent = 'Your reset link was invalid or expired. Please request a new one.';
+  }
+
+  // Handle forgot form
+  document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+
+    const res = await fetch('/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      // Redirect directly to reset page with token
+      window.location.href = `reset.html?token=${encodeURIComponent(data.token)}`;
+    } else {
+      const tokenBox = document.getElementById('tokenBox');
+      tokenBox.style.display = 'block';
+      tokenBox.style.color = 'red';
+      tokenBox.textContent = data.message || 'Error generating token.';
+    }
+  });
+</script>
+
+</body>
+</html>

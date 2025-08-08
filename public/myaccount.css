@@ -1,0 +1,117 @@
+body {
+  background: #121212;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.container {
+  max-width: 450px;
+  margin: auto;
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid gold;
+}
+
+h2 {
+  text-align: center;
+  color: gold;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  background: #222;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  margin-top: 4px;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #333;
+  display: block;
+  margin: 10px auto 15px;
+  border: 2px solid #555;
+  object-fit: cover;
+}
+
+.initials-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: bold;
+  background: #444;
+  color: gold;
+  text-transform: uppercase;
+}
+
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background: gold;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: orange;
+}
+
+.status {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.link-btn {
+  background-color: #4da6ff;
+  color: white;
+}
+
+.link-btn:hover {
+  background-color: #1a8cff;
+}
+
+.policy-btn {
+  background-color: #b266ff;
+  color: white;
+}
+
+.policy-btn:hover {
+  background-color: #9933ff;
+}
+
+.report-btn {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.report-btn:hover {
+  background-color: #cc0000;
+}
+
+.back-btn {
+  background-color: #444;
+  color: white;
+}
+
+.back-btn:hover {
+  background-color: #555;
+}

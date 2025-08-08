@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Report Chatroom Abuse</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="chat.css">
+  <style>
+    body {
+      background: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #333;
+    }
+    h2 {
+      text-align: center;
+      color: #ff4d4d; /* Red heading */
+    }
+    .guidance {
+      font-size: 14px;
+      color: #ccc;
+      margin: 10px 0 20px;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 5px;
+      border-left: 4px solid #ff4d4d; /* Red border */
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      background: #222;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+    textarea {
+      height: 120px;
+      resize: none;
+    }
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background: #ff4d4d; /* Red button */
+      color: black;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { background: #cc0000; } /* Dark red hover */
+    .back-btn {
+      margin-top: 10px;
+      background: #444;
+      color: white;
+    }
+    .back-btn:hover { background: #555; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Report Chatroom Abuse</h2>
+  <div class="guidance">
+    Tribe Radio takes all reports of chatroom abuse seriously.<br>
+    We will endeavour to investigate these matters in a timely manner.<br><br>
+    It is important that as much detail of the allegation is noted below.<br><br>
+    Please let us know...
+    <ul>
+      <li> Username of the offender. <i>(Select from dropdown list)</i></li>
+      <li>Time of the offence. <i>(As close as possible)</i></li>
+      <li>Details of the offence. <i>(Tell us what happened)</i></li>
+    </ul>
+    <br>
+    <center><i>(Tribe Radio UK will not disclose your details at any time.)</i></center>
+  </div>
+
+  <form id="reportForm">
+    <label>Your Username:</label>
+    <input type="text" id="reportUsername" readonly>
+
+    <label>Offending Username:</label>
+    <select id="offender">
+      <option value="" disabled selected>Select User</option>
+    </select>
+
+    <label>Details of Abuse:</label>
+    <textarea id="details" placeholder="Describe the abuse or issue"></textarea>
+
+    <button type="submit">Submit Report</button>
+    <button type="button" class="back-btn" onclick="window.location.href='index.html'">Back to Chat</button>
+  </form>
+</div>
+
+<script>
+  const escapeHTML = (str) =>
+    str.replace(/[&<>'"]/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[c]));
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (!user.username) {
+    alert('You must be logged in to submit a report.');
+    window.location.href = 'index.html';
+  }
+
+  // Prefill reporter username
+  document.getElementById('reportUsername').value = user.username;
+
+  // Load usernames for offender dropdown
+  async function loadUsernames() {
+    try {
+      const res = await fetch('/admin/users');
+      const users = await res.json();
+      const offenderSelect = document.getElementById('offender');
+
+      offenderSelect.innerHTML = '<option value="" disabled selected>Select User</option>';
+
+      let addedUsers = false;
+      users.forEach(u => {
+        if (u.username !== user.username) {
+          const option = document.createElement('option');
+          option.value = u.username;
+          option.textContent = escapeHTML(u.username);
+          offenderSelect.appendChild(option);
+          addedUsers = true;
+        }
+      });
+
+      if (!addedUsers) {
+        const option = document.createElement('option');
+        option.disabled = true;
+        option.textContent = 'No other users available';
+        offenderSelect.appendChild(option);
+      }
+    } catch (err) {
+      console.error('Error loading usernames:', err);
+    }
+  }
+
+  loadUsernames();
+
+  // Handle report submission
+  document.getElementById('reportForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const offender = document.getElementById('offender').value;
+    const details = document.getElementById('details').value.trim();
+
+    if (!offender || !details) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    const res = await fetch('/report-abuse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        reporter: user.username,
+        offender,
+        details,
+        time: new Date().toISOString()
+      })
+    });
+
+    const data = await res.json();
+    alert('Thank you for your report. We will review the information and let you know what will be done next.');
+    if (data.success) {
+      window.location.href = 'index.html';
+    }
+  });
+</script>
+
+</body>
+</html>

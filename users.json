@@ -1,0 +1,74 @@
+[
+  {
+    "username": "Lee James",
+    "email": "leeroper@me.com",
+    "password": "$2b$10$Pq7l5ouyEZQ7TUAg3v5GeetAdS8yfmhJxAtlisjq3dYJqAHtvs0wm",
+    "ip": "::ffff:127.0.0.1",
+    "agreedToPolicy": true,
+    "role": "admin",
+    "photo": "/images/lee_james.png"
+  },
+  {
+    "username": "Paul",
+    "email": "pauljhowden@gmail.com",
+    "password": "$2b$10$CecDpw/6Rt9WWK7auTiiUuKvSwkve0R.ug4s7Ne0qTR2vyZElYxKC",
+    "ip": "134.65.131.132",
+    "role": "admin"
+  },
+  {
+    "username": "Heather",
+    "email": "heathercooter@hotmail.com",
+    "password": "$2b$10$jJL1uFcJekIW8vZcQYi6SOhvbDdskwLJxCEP8zjXVB6yJfejZbAyK",
+    "ip": "88.97.212.82",
+    "role": "user"
+  },
+  {
+    "username": "Daphne Coatsworth ",
+    "email": "daphnecheungact@gmail.com",
+    "password": "$2b$10$hx1Li/8Tw3ck0yUbfq.ntueZsdiuhkPlEzZucGsG20zOeFXwOyjpe",
+    "ip": "176.20.178.118",
+    "role": "user"
+  },
+  {
+    "username": "AndyH",
+    "email": "andy@howdena.com",
+    "password": "$2b$10$8AoiewW4KJtb6fsxjziUcOxvU3gqhc78LgI4MEP4CHxbEpk8EHku2",
+    "ip": "188.29.80.39",
+    "role": "user"
+  },
+  {
+    "username": "Martin",
+    "email": "martincooter@gmail.com",
+    "password": "$2b$10$GaIdATHooopByv7UCSoFTuMi7YMPFx4sCc7tHjSTi1W1OhaHrAHHG",
+    "ip": "88.97.212.82",
+    "role": "user"
+  },
+  {
+    "username": "CazD",
+    "email": "clsdawes@gmail.com",
+    "password": "$2b$10$3.9bhojDDEITEptgAldx9OC5nxB6e6hetCXiE.7APUlmTLUE6Ibvq",
+    "ip": "86.191.148.243",
+    "role": "user"
+  },
+  {
+    "username": "TimOverTheRoad ",
+    "email": "timnorton4@virginmedia.com",
+    "password": "$2b$10$3xTX3yReJ/sew/BeYXBwHekvRcQsYZ1t2DPTb67cS1ddI46FysHM2",
+    "ip": "81.104.140.212",
+    "role": "user"
+  },
+  {
+    "username": "lee123test",
+    "email": "lee@lee.com",
+    "password": "$2b$10$.6WdWzCoPR8ILW4tfw58eOu2hXO3QTyt3Cdi/L9DveXb9wV6BrqkG",
+    "ip": "86.17.78.93",
+    "role": "user"
+  },
+  {
+    "username": "lee test",
+    "email": "lee@test.com",
+    "password": "$2b$10$7VTdf9lRKgOB/dBa4jYyMOoYcLYZvYEOnc97j4XK6tLhUGs3hXL3m",
+    "ip": "86.17.78.93",
+    "role": "user"
+  }
+]

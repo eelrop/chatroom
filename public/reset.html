@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reset Password - TribeChat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="chat.css">
+  <style>
+    body {
+      background: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid gold;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+    h2 {
+      text-align: center;
+      color: gold;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background: gold;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { background: orange; }
+    .back-btn {
+      margin-top: 10px;
+      background: #444;
+      color: white;
+    }
+    .back-btn:hover { background: #555; }
+    .token-status {
+      background: #2a2a2a;
+      border: 1px solid #555;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .token-status p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Reset Password</h2>
+
+  <!-- Token Status -->
+  <div id="tokenStatus" class="token-status" style="display:none;">
+    <p style="color: limegreen; font-weight: bold;">Security token verified ?</p>
+  </div>
+
+  <!-- Reset Form -->
+  <form id="resetForm">
+    <label>New Password:</label>
+    <input type="password" id="newPassword" placeholder="Enter new password" required>
+
+    <button type="submit">Reset Password</button>
+    <!-- Single Back to Login button -->
+    <button type="button" class="back-btn" onclick="window.location.href='index.html?showLogin=true&resetSuccess=true'">
+      Back to Login
+    </button>
+  </form>
+
+  <!-- Message Box -->
+  <div id="messageBox" class="token-status" style="display:none;"></div>
+</div>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const tokenFromURL = urlParams.get('token');
+
+  async function validateToken(token) {
+    const res = await fetch('/validate-reset-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    return res.json();
+  }
+
+  if (tokenFromURL) {
+    validateToken(tokenFromURL).then(data => {
+      const tokenStatus = document.getElementById('tokenStatus');
+      if (data.valid) {
+        tokenStatus.style.display = 'block';
+        tokenStatus.innerHTML = `<p style="color: limegreen; font-weight: bold;">Security token verified by server.</p>`;
+        document.body.dataset.token = tokenFromURL;
+      } else {
+        tokenStatus.style.display = 'block';
+        tokenStatus.innerHTML = `<p style="color: red; font-weight: bold;">Invalid or expired token. Redirecting...</p>`;
+        setTimeout(() => {
+          window.location.href = 'forgot.html?error=invalidToken';
+        }, 2000);
+      }
+    });
+  }
+
+  document.getElementById('resetForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = document.body.dataset.token;
+    const newPassword = document.getElementById('newPassword').value.trim();
+
+    const res = await fetch('/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, newPassword })
+    });
+    const data = await res.json();
+
+    const messageBox = document.getElementById('messageBox');
+    if (data.success) {
+      messageBox.style.display = 'block';
+      messageBox.style.color = '#00FF00';
+      messageBox.textContent = 'Password reset successful! You can now log in.';
+    } else {
+      messageBox.style.display = 'block';
+      messageBox.style.color = 'red';
+      messageBox.textContent = data.message || 'Error resetting password.';
+    }
+  });
+</script>
+
+</body>
+</html>

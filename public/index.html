@@ -1,0 +1,242 @@
+<!-- Chatroom written by Lee James for Tribe Radio UK -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat with Giphy and Emoji Picker</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="chat.css">
+
+  <!-- Emoji Mart CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/emoji-mart@latest/css/emoji-mart.css" />
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Scripts -->
+  <script src="https://unpkg.com/emoji-mart@latest/dist/browser.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div id="pageContainer">
+    
+    <!-- Chat Container -->
+    <div id="chatContainer">
+      <div id="chat"></div>
+
+      <!-- Users Modal -->
+      <div id="usersModal" class="modalOverlay" style="display:none; z-index:11000;">
+        <div class="modalContent" style="max-width:300px;">
+          <h2>Connected Users</h2>
+          <ul id="usersListModal"></ul>
+          <button id="closeUsersModal">Close</button>
+        </div>
+      </div>
+
+      <!-- Input Row -->
+      <div id="inputRow">
+        
+        <!-- Message Input Row with Emoji Button -->
+        <div id="messageInputRow">
+          <input 
+            type="text" 
+            id="messageInput" 
+            placeholder="Type a message..." 
+            autocomplete="off" 
+            name="chatMessageInput" />
+          <button id="emojiButton" title="Emoji Picker"><i class="fas fa-smile"></i></button>
+          <button id="sendButton">Send</button>
+        </div>
+
+        <!-- Button Row -->
+        <div id="buttonRow">
+          
+          <!-- GIF Search Row -->
+          <div class="gif-search-row">
+            <input 
+              type="text" 
+              id="gifSearchInput" 
+              placeholder="GIF Search..." 
+              autocomplete="off" 
+              name="gifSearchCustom" />
+            <button id="gifSearchButton"><i class="fas fa-search"></i></button>
+          </div>
+          
+          <!-- Other Buttons -->
+          <div class="button-group-bottom">
+  <button id="usersButton">Users (0)</button>
+  <button id="logoutButton">Log In</button>
+  <button id="accountButton">Account</button>
+  <button id="helpButton" class="help" onclick="window.open('guide.html', '_blank')">Help</button>
+  <button id="clearChatButton" style="display:none;">Clear Chat</button>
+  <button id="moderateButton" style="display:none;">Moderate</button>
+</div>
+
+        </div>
+
+        <!-- Emoji Popup -->
+        <div id="emojiPopup" class="popup-container" style="z-index: 12000;">
+          <div class="popup-header">
+            <span>Emoji Picker</span>
+            <button id="emojiClose" class="popup-close" aria-label="Close Emoji Picker">&times;</button>
+          </div>
+          <div id="emojiPicker"></div>
+        </div>
+
+        <!-- GIF Popup -->
+        <div id="gifPopup" class="popup-container" style="z-index: 12000;">
+          <div class="popup-header">
+            <span>GIF Search</span>
+            <button id="gifClose" class="popup-close" aria-label="Close GIF Picker">&times;</button>
+          </div>
+          <div id="gifResults"></div>
+        </div>
+
+      </div> <!-- End inputRow -->
+
+    </div> <!-- End chatContainer -->
+
+  </div> <!-- End pageContainer -->
+
+  <!-- Login / Register Modal -->
+  <div id="usernameModal" class="modalOverlay" style="z-index: 11000;">
+    <div class="modalContent" id="authModalContent">
+      
+      <!-- Login View -->
+      <div id="loginView">
+        <h2>Log In</h2>
+        <input type="text" id="loginUsername" placeholder="Username" autocomplete="username" />
+        <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" />
+        <div style="margin-top:10px;">
+          <button id="loginSubmit">Log In</button>
+          <button id="loginCancel">Cancel</button>
+          <p>
+            <a href="forgot.html" style="color: gold; text-decoration: underline;">Forgot Password?</a>
+          </p>
+          <p style="margin-top:10px;">
+            Don't have an account? <a href="#" id="showRegister">Register</a><br>
+          </p>
+        </div>
+      </div>
+
+      <!-- Register View -->
+      <div id="registerView" style="display:none;">
+        <h2>Register</h2>
+        <input type="text" id="registerUsername" placeholder="Username" autocomplete="off" />
+        <input type="email" id="registerEmail" placeholder="Email" autocomplete="off" />
+        <input type="password" id="registerPassword" placeholder="Password" autocomplete="new-password" />
+        <div style="margin:10px 0;">
+          <input type="checkbox" id="registerPolicy" /> 
+          I agree to the 
+          <a href="userpolicy.html" target="_blank" style="color: gold; text-decoration: underline;">
+            User Policy
+          </a>
+        </div>
+        <button id="registerSubmit">Register</button>
+        <button id="registerCancel">Cancel</button>
+        <p style="margin-top:10px;">Already have an account? <a href="#" id="showLogin">Log In</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout Modal -->
+  <div id="logoutModal" class="modalOverlay" style="z-index: 11000;">
+    <div class="modalContent">
+      <h2>Log Out?</h2>
+      <p>Are you sure you want to leave the chat?</p>
+      <div style="margin-top:10px;">
+        <button id="logoutConfirm">Log Out</button>
+        <button id="logoutCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Not Logged In Popup -->
+  <div id="notLoggedInOverlay" class="modalOverlay" style="display:none; z-index: 11500;">
+    <div class="modalContent" style="text-align:center; max-width:300px;">
+      <h2>You are not logged in</h2>
+      <p>Please log in to send messages.</p>
+      <button id="loginPromptBtn">Log In</button>
+    </div>
+  </div>
+  
+  <!-- Promotion Modal -->
+  <div id="promotionModal" class="modalOverlay">
+    <div class="modalContent">
+      <h2 id="promotionTitle">Promotion</h2>
+      <p id="promotionMessage">You have been promoted to Admin.</p>
+      <button id="promotionClose">OK</button>
+    </div>
+  </div>
+  
+    <!-- Confirmation Modal -->
+  <div id="confirmModal" class="modalOverlay">
+    <div class="modalContent">
+      <p id="confirmText">Are you sure?</p>
+      <button id="confirmYes" class="confirm-btn">Yes</button>
+      <button id="confirmNo" class="cancel-btn">No</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="chat.js"></script>
+
+  <!-- Login Redirect Logic -->
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Auto-open login modal if coming from reset or forced login
+if (urlParams.get('showLogin') === 'true') {
+  window.addEventListener('DOMContentLoaded', () => {
+    const usernameModal = document.getElementById('usernameModal');
+    const loginView = document.getElementById('loginView');
+    const registerView = document.getElementById('registerView');
+    const loginUsername = document.getElementById('loginUsername');
+    const loginPassword = document.getElementById('loginPassword');
+
+    if (usernameModal && loginView && registerView) {
+      loginView.style.display = 'block';
+      registerView.style.display = 'none';
+      usernameModal.style.display = 'flex';
+      
+      // ?? Smart focus: username if empty, password if already filled
+      setTimeout(() => {
+        if (loginUsername && loginPassword) {
+          if (loginUsername.value.trim() === '') {
+            loginUsername.focus();
+          } else {
+            loginPassword.focus();
+          }
+        }
+      }, 100);
+    }
+  });
+}
+
+    // Show success message if coming from reset
+    if (urlParams.get('resetSuccess') === 'true') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const loginView = document.getElementById('loginView');
+        if (loginView) {
+          const successMsg = document.createElement('div');
+          successMsg.style.background = '#2a2a2a';
+          successMsg.style.border = '1px solid limegreen';
+          successMsg.style.color = 'limegreen';
+          successMsg.style.padding = '8px';
+          successMsg.style.marginBottom = '10px';
+          successMsg.style.textAlign = 'center';
+          successMsg.style.borderRadius = '5px';
+          successMsg.textContent = 'Password reset successful. Please log in.';
+          
+          // Insert message at the top of login view
+          loginView.insertBefore(successMsg, loginView.firstChild);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
