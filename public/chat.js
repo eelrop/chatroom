@@ -364,22 +364,39 @@ function renderMessage(data) {
   if (adminUsers.includes(data.username)) userClass = 'admin-user';
   else if (matchedUser && matchedUser.role === 'moderator') userClass = 'moderator-user';
 
-  // Construct full message HTML
-  msgElement.innerHTML = `
-    <div class="msg-wrapper">
-      <div class="msg-header">
-        ${data.avatar 
-          ? `<img class="avatar" src="${data.avatar}">` 
-          : `<div class="avatar fallback">${(data.username[0] || '?').toUpperCase()}</div>`}
-        <span class="${userClass}">${data.username}</span>
+  // Build avatar HTML once
+  const avatarHTML = data.avatar
+    ? `<img class="avatar" src="${data.avatar}">`
+    : `<div class="avatar fallback">${(data.username[0] || '?').toUpperCase()}</div>`;
+
+  // Construct full message HTML based on type
+  if (data.isGif) {
+    msgElement.innerHTML = `
+      <div class="msg-wrapper">
+        <div class="msg-row">
+          ${avatarHTML}
+          <span class="${userClass}">${data.username}</span>
+        </div>
+        ${replyHTML}
+        <div class="gif-row">
+          <img src="${data.message}" class="chat-gif">
+          <div class="msg-actions"></div>
+        </div>
       </div>
-      ${replyHTML}
-      <div class="msg-content">
-        ${data.isGif ? `<img src="${data.message}" class="chat-gif">` : data.message}
+    `;
+  } else {
+    msgElement.innerHTML = `
+      <div class="msg-wrapper">
+        ${replyHTML}
+        <div class="msg-row">
+          ${avatarHTML}
+          <span class="${userClass}">${data.username}</span>
+          <span class="msg-text">${data.message}</span>
+          <div class="msg-actions"></div>
+        </div>
       </div>
-      <div class="msg-actions"></div>
-    </div>
-  `;
+    `;
+  }
 
   // Add buttons
   const actionsDiv = msgElement.querySelector('.msg-actions');
